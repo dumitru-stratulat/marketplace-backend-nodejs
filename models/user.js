@@ -11,7 +11,7 @@ const userSchema = new Schema({
     type: String,
     required: true
   },
-  name: {
+  username: {
     type: String,
     required: true
   },
@@ -19,7 +19,7 @@ const userSchema = new Schema({
     type: String,
     default: 'New'
   },
-  posts: [{
+  products: [{
     type: Schema.Types.ObjectId,
     ref: 'Post'
   }]

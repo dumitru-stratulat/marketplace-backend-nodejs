@@ -3,24 +3,28 @@ const fs = require('fs');
 const path = require('path')
 const { validationResult } = require('express-validator')
 
-const Post = require('../models/post');
+const Product = require('../models/product');
 const User = require('../models/user');
 
-exports.getPosts = (req, res, next) => {
+exports.getProducts = (req, res, next) => {
   const currentPage = req.query.page || 1;
   const perPage = 2;
   let totalItems;
-  Post.find()
-    .countDocuments()
+  let productsIds;
+  User.findById('5f4f80bfe07dfacbf060cfef')
+  .then(user=>{
+    productsIds = user.products
+  })
+  Product.find({_id: {$in:productsIds}})
+    .countDocuments({_id: {$in:productsIds}})
     .then(count => {
       totalItems = count;
-      return Post.find()
+      return Product.find({_id: {$in:productsIds}})
         .skip((currentPage - 1) * perPage)
         .limit(perPage)
     })
-    .then(posts => {
-      console.log(posts)
-      res.status(200).json({ posts, totalItems })
+    .then(products => {
+      res.status(200).json({ products, totalItems })
     })
     .catch(err => {
       if (!err.statusCode) {
@@ -30,47 +34,43 @@ exports.getPosts = (req, res, next) => {
     })
 }
 
-exports.createPost = (req, res, next) => {
+exports.createProduct = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const error = new Error('Validation failed,entered data is incorrect');
     error.statusCode = 422;
     throw error;
   }
-  if (!req.file) {
-    const error = new Error('No image provided');
-    error.statusCode = 422;
-    throw error;
-  }
-  const imageUrl = req.file.path;
+  // if (!req.file) {
+  //   const error = new Error('No image provided');
+  //   error.statusCode = 422;
+  //   throw error;
+  // }
+  // const imageUrl = req.file.path;
+  const imageUrl = 'hardcoded'
   const title = req.body.title;
   const content = req.body.content;
   let creator;
 
-  const post = new Post({
+  const product = new Product({
     title,
     content,
-    creator: req.userId,
+    // creator: req.userId,
+    creator: '5f4cf0d78a80368a276c69e7',
     imageUrl: imageUrl
   });
-  post.save()
+  product.save()
     .then((result) => {
-      return User.findById(req.userId);
-
+      // return User.findById(req.userId);
+      return User.findById('5f4f80bfe07dfacbf060cfef');
     })
     .then(user => {
       creator = user;
-      user.posts.push(post)
+      user.products.push(product)
       return user.save();
     })
     .then(result => {
-      res.status(201).json({
-        post: post,
-        creator: {
-          _id: creator._id,
-          name: creator.name
-        }
-      })
+      res.status(201).json(product)
     })
     .catch((err) => {
       if (!err.statusCode) {
@@ -82,7 +82,6 @@ exports.createPost = (req, res, next) => {
 
 exports.getPost = (req, res, next) => {
   const postId = req.params.postId
-  console.log(postId)
   Post.findById(postId)
     .then(post => {
       if (!post) {

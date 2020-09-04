@@ -6,27 +6,33 @@ const jwt = require('jsonwebtoken')
 
 exports.signup = (req, res, next) => {
   const errors = validationResult(req);
+
   if (!errors.isEmpty()) {
-    const error = new Error('Validagion failed');
+    const error = new Error('Validation failed');
     error.statusCode = 422;
     error.data = errors.array();
     throw error;
   }
 
   const email = req.body.email;
-  const name = req.body.name;
+  const username = req.body.username;
   const password = req.body.password;
   bcrypt.hash(password, 12)
     .then(hashedPassword => {
       const user = new User({
         email,
         password: hashedPassword,
-        name
+        username
       });
       return user.save();
     })
-    .then(result => {
-      res.status(201).json({ userId: result._id })
+    .then(newUser => {
+      const token = jwt.sign({
+        email:newUser.email,
+        userId: newUser._id.toString()
+      },'secret',{ expiresIn: '48h'});
+
+      res.status(201).json({ token,userId: newUser._id })
     })
     .catch(err => {
       if (!err.statusCode) {
@@ -60,7 +66,7 @@ exports.login = (req,res,next)=>{
     const token = jwt.sign({
       email:loadedUser.email,
       userId: loadedUser._id.toString()
-    },'secret',{ expiresIn: '1h'});
+    },'secret',{ expiresIn: '48h'});
     res.status(200).json({token,userId:loadedUser._id.toString()})
   })
   .catch(err=>{
