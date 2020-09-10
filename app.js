@@ -8,6 +8,8 @@ const multer  = require('multer');
 const feedRoutes = require('./routes/feed');
 const authRoutes = require('./routes/auth');
 const profileRoutes = require('./routes/profile');
+const productRoutes = require('./routes/product');
+const wishListRoutes = require('./routes/wishList');
 
 const app = express();
 
@@ -16,7 +18,8 @@ const fileStorage = multer.diskStorage({
     cb(null,'images');
   },
   filename: (req,file,cb)=>{
-    cb(null, new Date().toISOString() + '-' + file.originalname)
+    console.log(file)
+    cb(null, new Date().toISOString() + '-' + file.originalname + '.png')
   }
 })
 
@@ -32,7 +35,7 @@ const fileFilter = (req,file,cb) =>{
 }
 
 app.use(bodyParser.json());
-app.use(multer({storage: fileStorage, fileFilter}).single('image'))
+app.use(multer({storage: fileStorage, fileFilter}).array('image[]',5))
 app.use('/images',express.static(path.join(__dirname,'images')))
 
 app.use((req, res, next) => {
@@ -45,6 +48,8 @@ app.use((req, res, next) => {
 app.use('/feed', feedRoutes)
 app.use(authRoutes)
 app.use(profileRoutes)
+app.use(productRoutes)
+app.use(wishListRoutes)
 
 app.use((error,req,res,next)=>{
   console.log(error)

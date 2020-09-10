@@ -22,6 +22,10 @@ const userSchema = new Schema({
   products: [{
     type: Schema.Types.ObjectId,
     ref: 'Post'
+  }],
+  wishList:[{
+    type: Schema.Types.ObjectId,
+    ref: 'Product'
   }]
 })
 

@@ -46,7 +46,6 @@ exports.login = (req,res,next)=>{
   const email = req.body.email;
   const password = req.body.password;
   let loadedUser;
-
   User.findOne({email})
   .then(user =>{
     if(!user){

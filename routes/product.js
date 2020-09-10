@@ -2,13 +2,11 @@
 const express = require('express');
 const { body } = require('express-validator')
 
-const profileController = require('../controllers/profile');
+const productController = require('../controllers/product');
 const isAuth = require('../middleware/is-auth');
 
 const router = express.Router();
 
-router.get('/profile/:profileId', profileController.getProducts);
-
-router.post('/create', profileController.createProduct);
+router.get('/product/:productId',productController.getProduct);
 
 module.exports = router;
