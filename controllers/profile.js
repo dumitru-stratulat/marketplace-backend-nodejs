@@ -5,12 +5,13 @@ const User = require('../models/user');
 const { validationResult } = require('express-validator')
 
 exports.getProducts = async (req, res, next) => {
-  const profileId = req.params.profileId
+  const profileId = req.params.profileId;
   let totalItems;
   let productsIds;
 
   const user = await User.findById(profileId)
      productsIds = user.products
+     console.log(user)
 
   Product.find({_id: {$in:productsIds}})
     .then(products => {
@@ -37,8 +38,7 @@ exports.createProduct = (req, res, next) => {
   const price = req.body.price;
   const images = req.files;
   let imagesUrl = [];
-  let creator;
-
+  let creator = req.userId;
   if (!images) {
     const error = new Error('No image provided');
     error.statusCode = 422;
@@ -53,13 +53,12 @@ exports.createProduct = (req, res, next) => {
     content,
     category,
     price,
-    creator: '5f4cf0d78a80368a276c69e7',
+    creator,
     imagesUrl
   });
   product.save()
     .then((result) => {
-      // return User.findById(req.userId);
-      return User.findById('5f4f80bfe07dfacbf060cfef');
+      return User.findById(creator);
     })
     .then(user => {
       creator = user;

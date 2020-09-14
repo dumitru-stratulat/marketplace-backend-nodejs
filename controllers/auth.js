@@ -16,13 +16,19 @@ exports.signup = (req, res, next) => {
 
   const email = req.body.email;
   const username = req.body.username;
+  const profileTitle = req.body.profileTitle;
+  const profileDescription = req.body.profileDescription;
+  const location = req.body.location;
   const password = req.body.password;
   bcrypt.hash(password, 12)
     .then(hashedPassword => {
       const user = new User({
         email,
         password: hashedPassword,
-        username
+        username,
+        profileTitle,
+        profileDescription,
+        location
       });
       return user.save();
     })

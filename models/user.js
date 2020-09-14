@@ -19,6 +19,18 @@ const userSchema = new Schema({
     type: String,
     default: 'New'
   },
+  profileTitle: {
+    type: String,
+    required:true
+  },
+  profileDescription: {
+    type: String,
+    required: true
+  },
+  location:[{
+    type: String,
+    required: false
+  }],
   products: [{
     type: Schema.Types.ObjectId,
     ref: 'Post'

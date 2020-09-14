@@ -8,7 +8,6 @@ const isAuth = require('../middleware/is-auth');
 const router = express.Router();
 
 router.get('/profile/:profileId', profileController.getProducts);
-
-router.post('/create', profileController.createProduct);
+router.post('/create',isAuth, profileController.createProduct);
 
 module.exports = router;

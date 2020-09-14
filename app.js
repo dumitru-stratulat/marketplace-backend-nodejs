@@ -34,7 +34,7 @@ const fileFilter = (req,file,cb) =>{
   }
 }
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '50mb'}));
 app.use(multer({storage: fileStorage, fileFilter}).array('image[]',5))
 app.use('/images',express.static(path.join(__dirname,'images')))
 
@@ -45,7 +45,7 @@ app.use((req, res, next) => {
   next();
 })
 
-app.use('/feed', feedRoutes)
+app.use(feedRoutes)
 app.use(authRoutes)
 app.use(profileRoutes)
 app.use(productRoutes)
