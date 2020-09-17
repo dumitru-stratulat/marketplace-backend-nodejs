@@ -11,6 +11,7 @@ const profileRoutes = require('./routes/profile');
 const productRoutes = require('./routes/product');
 const wishListRoutes = require('./routes/wishList');
 const categoryRoutes = require('./routes/category');
+const searchRoutes = require('./routes/search');
 
 const app = express();
 
@@ -52,6 +53,7 @@ app.use(profileRoutes)
 app.use(productRoutes)
 app.use(wishListRoutes)
 app.use(categoryRoutes)
+app.use(searchRoutes)
 
 app.use((error,req,res,next)=>{
   console.log(error)
