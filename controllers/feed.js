@@ -1,17 +1,12 @@
 
-const fs = require('fs');
-const path = require('path')
-const { validationResult } = require('express-validator')
-
 const Product = require('../models/product');
-const User = require('../models/user');
 
 exports.getProducts = (req, res, next) => {
   // const currentPage = req.query.page || 1;
   let latestProducts;
 
   Product.find()
-    .limit()
+    .limit(10)
     .sort({createdAt: 'desc'})
     .then(products => {
       latestProducts = products
@@ -25,11 +20,9 @@ exports.getProducts = (req, res, next) => {
 
     Product.count().exec(function(err, count){
       let random = Math.floor(Math.random() * count);
-    
       Product.find().limit(5).skip(random).exec(
         function (err, result) {
-          res.status(200).json({latestProducts,randomProducts: result})
-    
+          res.status(200).json({latestProducts:latestProducts,randomProducts: result})
       });
     });
 }

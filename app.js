@@ -10,6 +10,7 @@ const authRoutes = require('./routes/auth');
 const profileRoutes = require('./routes/profile');
 const productRoutes = require('./routes/product');
 const wishListRoutes = require('./routes/wishList');
+const categoryRoutes = require('./routes/category');
 
 const app = express();
 
@@ -50,6 +51,7 @@ app.use(authRoutes)
 app.use(profileRoutes)
 app.use(productRoutes)
 app.use(wishListRoutes)
+app.use(categoryRoutes)
 
 app.use((error,req,res,next)=>{
   console.log(error)
