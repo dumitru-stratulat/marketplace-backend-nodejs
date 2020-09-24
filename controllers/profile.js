@@ -1,4 +1,37 @@
 
+const AWS = require('aws-sdk');
+
+const config = require('../config/config')
+
+const BUCKET_NAME = 'outfit.md';
+const IAM_USER_KEY = config.iamUser;
+const IAM_USER_SECRET = config.iamUser;
+
+function uploadToS3(file) {
+ let s3bucket = new AWS.S3({
+   accessKeyId: IAM_USER_KEY,
+   secretAccessKey: IAM_USER_SECRET,
+   Bucket: BUCKET_NAME,
+ });
+ s3bucket.createBucket(function () {
+
+   var params = {
+    Bucket: BUCKET_NAME,
+    Key: file.originalname,
+    Body:file.buffer,
+   };
+   s3bucket.upload(params, function (err, data) {
+    if (err) {
+     console.log('error in callback');
+     console.log(err);
+    }
+    console.log('success',params.Body);
+    console.log(data);
+   });
+ });
+}
+
+
 const Product = require('../models/product');
 const User = require('../models/user');
 
@@ -24,7 +57,7 @@ exports.getProducts = async (req, res, next) => {
       next(err)
     })
 }
-exports.createProduct = (req, res, next) => {
+exports.createProduct = async(req, res, next) => { 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const error = new Error('Validation failed,entered data is incorrect');
@@ -38,23 +71,24 @@ exports.createProduct = (req, res, next) => {
   const price = req.body.price;
   const images = req.files;
   let imagesUrl = [];
+  console.log('image',images)
   let creator = req.userId;
   if (!images) {
     const error = new Error('No image provided');
     error.statusCode = 422;
     throw error;
   }
-  images.forEach(element => {
-    imagesUrl.push(element.path);
-  });
-
+  // images.forEach(element => {
+  //   imagesUrl.push(element.path);
+  // });
+   await uploadToS3(images[0])
   const product = new Product({
     title,
     content,
     category,
     price,
     creator,
-    imagesUrl
+    imagesUrl:'hardcoded'
   });
   product.save()
     .then((result) => {
@@ -74,4 +108,5 @@ exports.createProduct = (req, res, next) => {
       }
       next(err)
     })
+   
 }
