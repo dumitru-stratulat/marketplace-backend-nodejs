@@ -2,6 +2,9 @@
 const Product = require('../models/product');
 
 exports.searchProduct = async(req, res, next) => {
+  const query = req.query.q;
+  let queries = query.split(' ');
+
  const q = [
   {
     '$search': {
@@ -9,12 +12,12 @@ exports.searchProduct = async(req, res, next) => {
         'should': [
           {
             'text': {
-              'query': 'book', 
+              'query': `${queries}`, 
               'path': 'title'
             }
           }, {
             'text': {
-              'query': 'saf', 
+              'query': `${queries}`, 
               'path': 'content'
             }
           }
@@ -25,7 +28,7 @@ exports.searchProduct = async(req, res, next) => {
 ]
 try{ 
     const search = await Product.aggregate(q)
-    console.log('search',search)
+    res.status(200).json(search)
 
   }catch(err) {
       if (!err.statusCode) {

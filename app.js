@@ -12,10 +12,11 @@ const productRoutes = require('./routes/product');
 const wishListRoutes = require('./routes/wishList');
 const categoryRoutes = require('./routes/category');
 const searchRoutes = require('./routes/search');
+const userRoutes = require('./routes/user');
 
 const app = express();
 
-const fileStorage = multer.diskStorage({
+const fileStorage = multer.memoryStorage({
   destination: (req,file,cb)=>{
     cb(null,'images');
   },
@@ -46,7 +47,6 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   next();
 })
-
 app.use(feedRoutes)
 app.use(authRoutes)
 app.use(profileRoutes)
@@ -54,6 +54,7 @@ app.use(productRoutes)
 app.use(wishListRoutes)
 app.use(categoryRoutes)
 app.use(searchRoutes)
+app.use(userRoutes)
 
 app.use((error,req,res,next)=>{
   console.log(error)

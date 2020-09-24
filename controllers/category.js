@@ -9,10 +9,11 @@ exports.getProductsByCategory = async(req, res, next) => {
 try{ 
   const count = await Product.find({'category':{$in:[gender,subCategory]}})
   .countDocuments()
-
+  
   const products = await Product.find({'category':{$in:[gender,subCategory]}})
     .skip((currentPage-1) * productsPerPage)
     .limit(productsPerPage)
+
     res.status(200).json({products,totalItems: count})
   }catch(err) {
       if (!err.statusCode) {
