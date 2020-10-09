@@ -9,4 +9,6 @@ const router = express.Router();
 
 router.get('/product/:productId',productController.getProduct);
 
+router.delete('/product/:productId',isAuth,productController.deleteProduct);
+
 module.exports = router;

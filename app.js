@@ -16,15 +16,7 @@ const userRoutes = require('./routes/user');
 
 const app = express();
 
-const fileStorage = multer.memoryStorage({
-  destination: (req,file,cb)=>{
-    cb(null,'images');
-  },
-  filename: (req,file,cb)=>{
-    console.log(file)
-    cb(null, new Date().toISOString() + '-' + file.originalname + '.png')
-  }
-})
+const fileStorage = multer.memoryStorage()
 
 const fileFilter = (req,file,cb) =>{
   if( file.mimetype === 'image/png' ||
@@ -36,8 +28,8 @@ const fileFilter = (req,file,cb) =>{
     cb(null,false)
   }
 }
-
-app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser({limit: '10mb'}));
+app.use(bodyParser.json());
 app.use(multer({storage: fileStorage, fileFilter}).array('image[]',5))
 app.use('/images',express.static(path.join(__dirname,'images')))
 
