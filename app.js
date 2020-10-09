@@ -58,6 +58,6 @@ app.use((error,req,res,next)=>{
 
 mongoose.connect('mongodb+srv://dimka:qwe123@cluster0-none3.mongodb.net/marketplace?retryWrites=true&w=majority')
   .then(result => {
-    app.listen(8080)
+    app.listen(process.env.PORT)
   })
   .catch(err => console.log(err))
