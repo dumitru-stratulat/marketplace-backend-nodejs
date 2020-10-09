@@ -2,11 +2,10 @@
 const Product = require('../models/product');
 
 exports.getProducts = (req, res, next) => {
-  // const currentPage = req.query.page || 1;
   let latestProducts;
 
   Product.find()
-    .limit(10)
+    .limit(12)
     .sort({createdAt: 'desc'})
     .then(products => {
       latestProducts = products
@@ -26,7 +25,7 @@ exports.getProducts = (req, res, next) => {
       });
     });
 }
-
+//for future development
 
 // exports.updatePost = (req, res, next) => {
 //   const errors = validationResult(req);
