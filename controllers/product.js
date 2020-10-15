@@ -10,8 +10,18 @@ exports.getProduct = async(req, res, next) => {
   const productId = req.params.productId 
 
   const product = await Product.find({_id:productId})
-  const user = await User.findById(product[0].creator)
-  res.status(200).json({product,user})
+  const userInfo = await User.findById(product[0].creator)
+  res.status(200).json({
+    product,
+    user:{
+      location: userInfo.location,
+      userId: userInfo._id,
+      email: userInfo.email,
+      username: userInfo.username,
+      profileTitle: userInfo.profileTitle,
+      profileDescription: userInfo.profileDescription
+    }
+  })
 }
 
 exports.deleteProduct = async(req, res, next) => {
@@ -28,7 +38,6 @@ exports.deleteProduct = async(req, res, next) => {
     throw error;
   }
   const response = await Product.findByIdAndRemove(productId);
-  console.log(response)
   res.status(200).json({message:'product deleted'})
 }
 

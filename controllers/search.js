@@ -3,7 +3,6 @@ const Product = require('../models/product');
 
 exports.searchProduct = async(req, res, next) => {
   const currentPage = req.query.page*1 || 1;
-  console.log(currentPage)
   const productsPerPage = 20;
   const query = req.query.q;
   let queries = query.split(' ');
