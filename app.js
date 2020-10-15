@@ -56,7 +56,7 @@ app.use((error,req,res,next)=>{
   res.status(status).json({message, data})
 })
 
-mongoose.connect('mongodb+srv://dimka:qwe123@cluster0-none3.mongodb.net/marketplace?retryWrites=true&w=majority')
+mongoose.connect(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0-none3.mongodb.net/${process.env.MONGO_DATABASE}?retryWrites=true&w=majority`)
   .then(result => {
     app.listen(app.listen(process.env.PORT || 8081))
   })

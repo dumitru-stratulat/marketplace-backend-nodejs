@@ -3,15 +3,11 @@ const AWS = require('aws-sdk');
 
 const config = require('../config/config')
 
-const BUCKET_NAME = 'outfit.md';
-const IAM_USER_KEY = 'AKIA3XZ54QING7UO22EM';
-const IAM_USER_SECRET = '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';
-
 function uploadToS3(file) {
   let s3bucket = new AWS.S3({
-    accessKeyId: IAM_USER_KEY,
-    secretAccessKey: IAM_USER_SECRET,
-    Bucket: BUCKET_NAME,
+    accessKeyId: process.env.IAM_USER_KEY,
+    secretAccessKey: process.env.IAM_USER_SECRET,
+    Bucket: process.env.BUCKET_NAME,
   });
   s3bucket.createBucket(function () {
 
